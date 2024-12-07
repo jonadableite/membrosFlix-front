@@ -85,6 +85,7 @@ export function Login() {
 
 	return (
 		<div className="min-h-screen flex items-center justify-center relative">
+			{/* biome-ignore lint/style/useSelfClosingElements: <explanation> */}
 			<div
 				className="absolute inset-0 bg-cover bg-center"
 				style={{
@@ -179,6 +180,7 @@ export function Login() {
 					</Button>
 				</form>
 				<a
+					// biome-ignore lint/a11y/useValidAnchor: <explanation>
 					href="#"
 					className="text-sm text-purple-500 hover:underline mt-4 block text-center"
 				>

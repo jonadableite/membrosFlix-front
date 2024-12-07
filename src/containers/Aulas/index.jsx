@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import emptyFilesIcon from "../../assets/empty-files.svg";
 import sendIcon from "../../assets/icon-send-message.svg";
 import api, { setAuthorizationToken } from "../../services/api";
 
 const getCurrentUserId = () => {
-	const user = JSON.parse(localStorage.getItem("user"));
-	return user ? user.id : null;
+	try {
+		const user = JSON.parse(localStorage.getItem("@membrosflix:user"));
+		return user ? user.id : null;
+	} catch (error) {
+		console.error("Erro ao recuperar o ID do usuário:", error);
+		return null;
+	}
 };
 
 const LessonPage = () => {
@@ -19,13 +25,14 @@ const LessonPage = () => {
 	const [userLiked, setUserLiked] = useState(false);
 	const [comments, setComments] = useState([]);
 	const [newComment, setNewComment] = useState("");
+	const [materials, setMaterials] = useState([]);
 
 	useEffect(() => {
 		const token = localStorage.getItem("@membrosflix:token");
 		if (token) {
 			setAuthorizationToken(token);
 		} else {
-			navigate("/login"); // Redireciona para login se o token não estiver presente
+			navigate("/login");
 		}
 
 		const fetchLesson = async () => {
@@ -59,9 +66,21 @@ const LessonPage = () => {
 			}
 		};
 
+		const fetchMaterials = async () => {
+			try {
+				const response = await api.get(
+					`/cursos/${courseId}/aulas/${lessonId}/materiais`,
+				);
+				setMaterials(response.data);
+			} catch (error) {
+				console.error("Erro ao buscar materiais:", error);
+			}
+		};
+
 		fetchLesson();
 		fetchAllLessons();
 		fetchComments();
+		fetchMaterials();
 	}, [courseId, lessonId, navigate]);
 
 	const nextLessons = allLessons.filter(
@@ -87,11 +106,17 @@ const LessonPage = () => {
 
 		try {
 			if (userLiked) {
-				await api.delete(`/likes/${lessonId}/aula`, { data: { userId } });
-				setLikes(likes - 1);
+				// Remover like
+				await api.delete(`/cursos/${courseId}/aulas/${lessonId}/likes`, {
+					data: { userId },
+				});
+				setLikes((prevLikes) => prevLikes - 1);
 			} else {
-				await api.post(`/likes/${lessonId}/aula`, { userId });
-				setLikes(likes + 1);
+				// Adicionar like
+				await api.post(`/cursos/${courseId}/aulas/${lessonId}/likes`, {
+					userId,
+				});
+				setLikes((prevLikes) => prevLikes + 1);
 			}
 			setUserLiked(!userLiked);
 		} catch (error) {
@@ -157,7 +182,7 @@ const LessonPage = () => {
 				<div className="mt-6 mb-8 w-full min-h-[0.7px] bg-gradient-to-r from-purple-500 to-transparent"></div>
 				<div className="flex items-center gap-2 mb-9">
 					<h2 className="text-md font-bold">Espaço de Networking</h2>
-					<span>| {comments.length} Comentários</span>
+					<span>|{comments.length} Comentários</span>
 				</div>
 				<div className="flex flex-col gap-4">
 					{comments.map((comment, index) => (
@@ -177,7 +202,7 @@ const LessonPage = () => {
 								rows="3"
 							/>
 						</div>
-						<div className="flex w-full text-[#926BFF] max-md:absolute max-md:w-fit max-md:right-2 max-md:top-4 flex items-center justify-start mt-2">
+						<div className="flex w-full text-[#926BFF] max-md:absolute max-md:w-fit max-md:right-2 max-md:top-4 items-center justify-start mt-2">
 							<button
 								type="button"
 								onClick={handleCommentSubmit}
@@ -195,7 +220,7 @@ const LessonPage = () => {
 										height: "auto",
 										width: "auto",
 										color: "transparent",
-										marginLeft: "0px", // Remove o espaçamento
+										marginLeft: "0px",
 									}}
 								/>
 							</button>
@@ -265,10 +290,35 @@ const LessonPage = () => {
 						</div>
 					)}
 					{activeTab === "Materiais" && (
-						<ul className="list-none p-0 m-0 space-y-2">
-							<li className="p-2 bg-gray-900 rounded-md">Material 1</li>
-							<li className="p-2 bg-gray-900 rounded-md">Material 2</li>
-						</ul>
+						<div className="flex flex-col items-center pt-[36px]">
+							{materials.length > 0 ? (
+								<ul className="list-none p-0 m-0 space-y-2">
+									{materials.map((material) => (
+										<li
+											key={material.id}
+											className="p-2 bg-gray-900 rounded-md"
+										>
+											<a
+												href={material.url}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="text-white hover:underline"
+											>
+												{material.title}
+											</a>
+										</li>
+									))}
+								</ul>
+							) : (
+								<>
+									<img src={emptyFilesIcon} alt="Nenhum material" />
+									<p className="font-bold text-white mt-4">Nenhum material</p>
+									<p className="text-[14px] leading-[20px] text-[#6A6A86]">
+										Os materiais estarão visíveis aqui.
+									</p>
+								</>
+							)}
+						</div>
 					)}
 				</div>
 			</div>

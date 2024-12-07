@@ -93,6 +93,7 @@ export function Navbar() {
 				].map(({ name, icon, label }) => (
 					<div
 						key={name}
+						// biome-ignore lint/a11y/useSemanticElements: <explanation>
 						role="button"
 						tabIndex={0}
 						className={`flex items-center gap-2 cursor-pointer relative ${
@@ -113,6 +114,7 @@ export function Navbar() {
 			</div>
 			<div className="flex items-center gap-4">
 				<div className="relative">
+					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 					<img
 						src={IconNotification}
 						alt="Notificações"
@@ -158,6 +160,7 @@ export function Navbar() {
 				</div>
 				{user && (
 					<div
+						// biome-ignore lint/a11y/useSemanticElements: <explanation>
 						role="button"
 						tabIndex={0}
 						className="relative flex items-center gap-2 cursor-pointer bg-transparent border-none"
@@ -174,6 +177,7 @@ export function Navbar() {
 								userDropdownOpen ? "rotate-180" : "rotate-0"
 							}`}
 						>
+							{/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
 							<svg
 								className="w-4 h-4 text-white"
 								fill="none"

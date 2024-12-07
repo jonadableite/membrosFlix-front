@@ -9,9 +9,12 @@ export const api = axios.create({
 export const setAuthorizationToken = (token) => {
 	if (token) {
 		// Define o token no cabeçalho de autorização
+		// biome-ignore lint/complexity/useLiteralKeys: <explanation>
 		api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 	} else {
 		// Remove o cabeçalho de autorização se o token não estiver presente
+		// biome-ignore lint/complexity/useLiteralKeys: <explanation>
+		// biome-ignore lint/performance/noDelete: <explanation>
 		delete api.defaults.headers.common["Authorization"];
 	}
 };
