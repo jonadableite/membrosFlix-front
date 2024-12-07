@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos globais adicionais */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Estilização da scrollbar para navegadores WebKit (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 12px; /* Largura da scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #0e0e12;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    90deg,
+    #7B61FF 0%,
+    #5A47CC 50%,
+    #16161E 100%
+  );
+  background-size: 200% 100%;
+  border-radius: 10px;
+  border: 2px solid #0e0e12;
+  animation: gradientScroll 3s linear infinite;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    90deg,
+    #5A47CC 0%,
+    #7B61FF 50%,
+    #16161E 100%
+  );
+  background-size: 200% 100%;
+  animation: gradientScroll 2s linear infinite;
+}
+
+@keyframes gradientScroll {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 0%;
+  }
+}
+
+/* Suporte para Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #7B61FF #0e0e12;
+}
