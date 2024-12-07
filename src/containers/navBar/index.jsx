@@ -86,55 +86,33 @@ export function Navbar() {
 		>
 			<img src={LogoImage} alt="Logo" className="h-10" />
 			<div className="flex items-center gap-6">
-				<button
-					type="button"
-					className={`flex items-center gap-2 cursor-pointer ${
-						activeLink === "inicio" ? "text-purple-500" : "text-white"
-					} bg-transparent border-none`}
-					onClick={() => handleNavigation("inicio")}
-					onKeyDown={(e) => {
-						if (e.key === "Enter" || e.key === " ") {
-							handleNavigation("inicio");
-						}
-					}}
-				>
-					<img src={IconHome} alt="Início" className="w-5 h-5" />
-					Início
-				</button>
-				<button
-					type="button"
-					className={`flex items-center gap-2 cursor-pointer ${
-						activeLink === "comunidade" ? "text-purple-500" : "text-white"
-					} bg-transparent border-none`}
-					onClick={() => handleNavigation("comunidade")}
-					onKeyDown={(e) => {
-						if (e.key === "Enter" || e.key === " ") {
-							handleNavigation("comunidade");
-						}
-					}}
-				>
-					<img src={IconCommunity} alt="Comunidade" className="w-5 h-5" />
-					Comunidade
-				</button>
-				<button
-					type="button"
-					className={`flex items-center gap-2 cursor-pointer ${
-						activeLink === "contato" ? "text-purple-500" : "text-white"
-					} bg-transparent border-none`}
-					onClick={() => handleNavigation("contato")}
-					onKeyDown={(e) => {
-						if (e.key === "Enter" || e.key === " ") {
-							handleNavigation("contato");
-						}
-					}}
-				>
-					<img src={IconContact} alt="Contato" className="w-5 h-5" />
-					Contato
-				</button>
+				{[
+					{ name: "inicio", icon: IconHome, label: "Início" },
+					{ name: "comunidade", icon: IconCommunity, label: "Comunidade" },
+					{ name: "contato", icon: IconContact, label: "Contato" },
+				].map(({ name, icon, label }) => (
+					<div
+						key={name}
+						role="button"
+						tabIndex={0}
+						className={`flex items-center gap-2 cursor-pointer relative ${
+							activeLink === name ? "text-purple-500" : "text-white"
+						} bg-transparent border-none hover:text-purple-500`}
+						onClick={() => handleNavigation(name)}
+						onKeyDown={(e) => {
+							if (e.key === "Enter" || e.key === " ") {
+								handleNavigation(name);
+							}
+						}}
+					>
+						<img src={icon} alt={label} className="w-5 h-5" />
+						{label}
+						<span className="absolute bottom-[-4px] left-0 right-0 h-[2px] bg-purple-500 transform scale-x-0 transition-transform duration-300 hover:scale-x-100" />
+					</div>
+				))}
 			</div>
 			<div className="flex items-center gap-4">
 				<div className="relative">
-					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 					<img
 						src={IconNotification}
 						alt="Notificações"
@@ -179,8 +157,9 @@ export function Navbar() {
 					)}
 				</div>
 				{user && (
-					<button
-						type="button"
+					<div
+						role="button"
+						tabIndex={0}
 						className="relative flex items-center gap-2 cursor-pointer bg-transparent border-none"
 						onClick={toggleUserDropdown}
 						onKeyDown={(e) => {
@@ -191,12 +170,25 @@ export function Navbar() {
 					>
 						<span className="text-white max-w-xs truncate">{user.name}</span>
 						<div
-							className={`w-0 h-0 border-l-4 border-r-4 ${
-								userDropdownOpen
-									? "border-t-0 border-b-4 border-white"
-									: "border-t-4 border-b-0 border-white"
-							} transition-transform`}
-						/>
+							className={`transform transition-transform ${
+								userDropdownOpen ? "rotate-180" : "rotate-0"
+							}`}
+						>
+							<svg
+								className="w-4 h-4 text-white"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth="2"
+									d="M19 9l-7 7-7-7"
+								/>
+							</svg>
+						</div>
 						{userDropdownOpen && (
 							<div className="text-white absolute top-10 right-0 bg-base bg-opacity-90 rounded-lg shadow-lg p-4 z-50 w-56">
 								<div className="flex items-center gap-2 p-2 hover:bg-purple-500 hover:bg-opacity-20 rounded-md cursor-pointer">
@@ -230,7 +222,7 @@ export function Navbar() {
 								</button>
 							</div>
 						)}
-					</button>
+					</div>
 				)}
 			</div>
 		</nav>

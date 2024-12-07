@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import api from "../../services/api";
+import sendIcon from "../../assets/icon-send-message.svg";
+import api, { setAuthorizationToken } from "../../services/api";
 
 const getCurrentUserId = () => {
 	const user = JSON.parse(localStorage.getItem("user"));
@@ -17,8 +18,16 @@ const LessonPage = () => {
 	const [likes, setLikes] = useState(0);
 	const [userLiked, setUserLiked] = useState(false);
 	const [comments, setComments] = useState([]);
+	const [newComment, setNewComment] = useState("");
 
 	useEffect(() => {
+		const token = localStorage.getItem("@membrosflix:token");
+		if (token) {
+			setAuthorizationToken(token);
+		} else {
+			navigate("/login"); // Redireciona para login se o token não estiver presente
+		}
+
 		const fetchLesson = async () => {
 			try {
 				const response = await api.get(`/cursos/${courseId}/aulas/${lessonId}`);
@@ -53,7 +62,7 @@ const LessonPage = () => {
 		fetchLesson();
 		fetchAllLessons();
 		fetchComments();
-	}, [courseId, lessonId]);
+	}, [courseId, lessonId, navigate]);
 
 	const nextLessons = allLessons.filter(
 		(l) => l.id > Number.parseInt(lessonId, 10),
@@ -87,6 +96,22 @@ const LessonPage = () => {
 			setUserLiked(!userLiked);
 		} catch (error) {
 			console.error("Erro ao atualizar like:", error);
+		}
+	};
+
+	const handleCommentSubmit = async () => {
+		if (!newComment.trim()) return;
+
+		try {
+			const userId = getCurrentUserId();
+			await api.post(`/cursos/${courseId}/aulas/${lessonId}/comentarios`, {
+				userId,
+				text: newComment,
+			});
+			setComments([...comments, { text: newComment }]);
+			setNewComment("");
+		} catch (error) {
+			console.error("Erro ao enviar comentário:", error);
 		}
 	};
 
@@ -140,10 +165,42 @@ const LessonPage = () => {
 							<p className="text-sm">{comment.text}</p>
 						</div>
 					))}
-					<textarea
-						placeholder="Adicione um comentário..."
-						className="w-full h-24 bg-gray-900 text-white border border-purple-600 rounded-md p-2 resize-none"
-					/>
+					<div className="flex-1 relative">
+						<div className="relative">
+							<textarea
+								id="newComment"
+								name="newComment"
+								placeholder="Digite seu novo post aqui..."
+								value={newComment}
+								onChange={(e) => setNewComment(e.target.value)}
+								className="border focus:outline-none w-full max-md:min-h-[44px] md:min-h-[64px] h-[104px] p-4 max-md:pr-6 rounded-md border-[#24242E] bg-[#16161E]"
+								rows="3"
+							/>
+						</div>
+						<div className="flex w-full text-[#926BFF] max-md:absolute max-md:w-fit max-md:right-2 max-md:top-4 flex items-center justify-start mt-2">
+							<button
+								type="button"
+								onClick={handleCommentSubmit}
+								className="flex items-center cursor-pointer justify-between text-sm"
+							>
+								<span className="max-md:hidden">Enviar comentário</span>
+								<img
+									src={sendIcon}
+									alt="Enviar"
+									loading="lazy"
+									decoding="async"
+									className="w-4 h-4"
+									style={{
+										position: "relative",
+										height: "auto",
+										width: "auto",
+										color: "transparent",
+										marginLeft: "0px", // Remove o espaçamento
+									}}
+								/>
+							</button>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div
@@ -167,6 +224,8 @@ const LessonPage = () => {
 				<div className="p-4 h-full relative">
 					{activeTab === "Anotações" && (
 						<textarea
+							id="notes"
+							name="notes"
 							placeholder="Digite suas anotações aqui..."
 							value={notes}
 							onChange={(e) => setNotes(e.target.value)}
@@ -202,7 +261,7 @@ const LessonPage = () => {
 									</div>
 								</div>
 							))}
-							<div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#16161e] to-transparent"></div>
+							<div className="absolute bottom-0 left-0 right-0 h-60 bg-gradient-to-t from-[#16161e] to-transparent"></div>
 						</div>
 					)}
 					{activeTab === "Materiais" && (

@@ -1,27 +1,24 @@
-// src/services/api.js
 import axios from "axios";
 
-// Cria uma instância do axios com a URL base
+// Criação da instância do Axios com a URL base da API
 export const api = axios.create({
 	baseURL: "http://localhost:3001", // Certifique-se de que a URL base está correta
 });
 
-// Função para configurar o token nos headers
+// Função para configurar o token de autorização
 export const setAuthorizationToken = (token) => {
 	if (token) {
-		// biome-ignore lint/complexity/useLiteralKeys: <explanation>
+		// Define o token no cabeçalho de autorização
 		api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 	} else {
-		// biome-ignore lint/complexity/useLiteralKeys: <explanation>
-		// biome-ignore lint/performance/noDelete: <explanation>
+		// Remove o cabeçalho de autorização se o token não estiver presente
 		delete api.defaults.headers.common["Authorization"];
 	}
 };
 
-// Ao iniciar, configure o token se ele estiver no localStorage
+// Configuração inicial do token ao carregar o módulo
 const token = localStorage.getItem("@membrosflix:token");
-if (token) {
-	setAuthorizationToken(token);
-}
+setAuthorizationToken(token);
 
+// Exporta a instância configurada do Axios
 export default api;

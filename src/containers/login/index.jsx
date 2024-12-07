@@ -55,14 +55,12 @@ export function Login() {
 			toast.success("Seja bem-vindo(a)! 🎉");
 
 			// Armazenar token e dados do usuário
-			localStorage.setItem("@membrosflix:token", response.data.token);
-			localStorage.setItem(
-				"@membrosflix:user",
-				JSON.stringify(response.data.user),
-			);
+			const { token, user } = response.data;
+			localStorage.setItem("@membrosflix:token", token);
+			localStorage.setItem("@membrosflix:user", JSON.stringify(user));
 
 			// Definir o token nos headers padrão da API
-			setAuthorizationToken(response.data.token);
+			setAuthorizationToken(token);
 
 			// Navegar para a página home
 			navigate("/home");

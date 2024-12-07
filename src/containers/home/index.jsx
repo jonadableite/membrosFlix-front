@@ -68,7 +68,6 @@ export function Home() {
 		{ id: 5, title: "Curso 5", image: bonusImage },
 	];
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		updateScrollButtons(
 			sliderRef,
@@ -99,23 +98,20 @@ export function Home() {
 						className="h-16 mb-4"
 					/>
 					<div className="gap-x-2 flex text-xs mt-8 mb-4">
-						{/* biome-ignore lint/a11y/useButtonType: <explanation> */}
 						<button
-							className="text-xs text-white bg-gray-700 bg-opacity-70 rounded px-4 py-2 cursor-pointer"
+							className="text-xs text-white bg-gray-700 bg-opacity-70 rounded px-4 py-2 cursor-pointer hover:bg-opacity-90 hover:bg-gray-600"
 							onClick={() => console.log("Grupo")}
 						>
 							Grupo
 						</button>
-						{/* biome-ignore lint/a11y/useButtonType: <explanation> */}
 						<button
-							className="text-xs text-white bg-gray-700 bg-opacity-70 rounded px-4 py-2 cursor-pointer"
+							className="text-xs text-white bg-gray-700 bg-opacity-70 rounded px-4 py-2 cursor-pointer hover:bg-opacity-90 hover:bg-gray-600"
 							onClick={() => console.log("Whatsapp")}
 						>
 							Whatsapp
 						</button>
-						{/* biome-ignore lint/a11y/useButtonType: <explanation> */}
 						<button
-							className="text-xs text-white bg-gray-700 bg-opacity-70 rounded px-4 py-2 cursor-pointer"
+							className="text-xs text-white bg-gray-700 bg-opacity-70 rounded px-4 py-2 cursor-pointer hover:bg-opacity-90 hover:bg-gray-600"
 							onClick={() => console.log("Avisos")}
 						>
 							Avisos
@@ -162,7 +158,7 @@ export function Home() {
 
 				<div
 					ref={sliderRef}
-					className="flex gap-6 scroll-smooth w-full mx-auto"
+					className="flex gap-6 scroll-smooth w-full mx-auto overflow-hidden"
 					onScroll={() =>
 						updateScrollButtons(
 							sliderRef,
@@ -241,7 +237,7 @@ export function Home() {
 
 				<div
 					ref={lessonsSliderRef}
-					className="flex gap-6 scroll-smooth w-full mx-auto"
+					className="flex gap-6 scroll-smooth w-full mx-auto overflow-hidden"
 					onScroll={() =>
 						updateScrollButtons(
 							lessonsSliderRef,
@@ -253,7 +249,6 @@ export function Home() {
 					{lessons.map((lesson) => (
 						<div key={lesson.id} className="flex flex-col items-center gap-2">
 							<div
-								// biome-ignore lint/a11y/useSemanticElements: <explanation>
 								role="button"
 								tabIndex={0}
 								className="flex-none w-72 h-40 bg-base rounded-lg relative overflow-hidden cursor-pointer"
