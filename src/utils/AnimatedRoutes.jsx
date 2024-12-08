@@ -6,6 +6,7 @@ import Comunidade from "../containers/comunidade";
 import Contact from "../containers/contact";
 import Home from "../containers/home";
 import Login from "../containers/login";
+import ManagerDashboard from "../containers/manager"; // Importe o componente do painel administrativo
 import { ProtectedRoute } from "../routes/ProtectedRoute";
 
 export function AnimatedRoutes() {
@@ -43,6 +44,14 @@ export function AnimatedRoutes() {
 					element={
 						<ProtectedRoute>
 							<LessonPage />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="manager"
+					element={
+						<ProtectedRoute>
+							<ManagerDashboard />
 						</ProtectedRoute>
 					}
 				/>

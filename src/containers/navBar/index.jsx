@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import IconContact from "../../assets/contact.png";
+import IconManager from "../../assets/gerente.svg"; // Importa o ícone do gerente
 import IconCentral from "../../assets/icon-central.svg";
 import IconCommunity from "../../assets/icon-header-community.svg";
 import IconHome from "../../assets/icon-header.svg";
@@ -67,6 +68,9 @@ export function Navbar() {
 			case "contato":
 				window.location.href = "/contact";
 				break;
+			case "manager":
+				window.location.href = "/manager";
+				break;
 			default:
 				break;
 		}
@@ -90,31 +94,37 @@ export function Navbar() {
 					{ name: "inicio", icon: IconHome, label: "Início" },
 					{ name: "comunidade", icon: IconCommunity, label: "Comunidade" },
 					{ name: "contato", icon: IconContact, label: "Contato" },
-				].map(({ name, icon, label }) => (
-					<div
-						key={name}
-						// biome-ignore lint/a11y/useSemanticElements: <explanation>
-						role="button"
-						tabIndex={0}
-						className={`flex items-center gap-2 cursor-pointer relative ${
-							activeLink === name ? "text-purple-500" : "text-white"
-						} bg-transparent border-none hover:text-purple-500`}
-						onClick={() => handleNavigation(name)}
-						onKeyDown={(e) => {
-							if (e.key === "Enter" || e.key === " ") {
-								handleNavigation(name);
-							}
-						}}
-					>
-						<img src={icon} alt={label} className="w-5 h-5" />
-						{label}
-						<span className="absolute bottom-[-4px] left-0 right-0 h-[2px] bg-purple-500 transform scale-x-0 transition-transform duration-300 hover:scale-x-100" />
-					</div>
-				))}
+					// Adiciona o botão Manager visível apenas para administradores
+					user?.admin && {
+						name: "manager",
+						icon: IconManager,
+						label: "Manager",
+					},
+				]
+					.filter(Boolean)
+					.map(({ name, icon, label }) => (
+						<div
+							key={name}
+							role="button"
+							tabIndex={0}
+							className={`flex items-center gap-2 cursor-pointer relative ${
+								activeLink === name ? "text-purple-500" : "text-white"
+							} bg-transparent border-none hover:text-purple-500`}
+							onClick={() => handleNavigation(name)}
+							onKeyDown={(e) => {
+								if (e.key === "Enter" || e.key === " ") {
+									handleNavigation(name);
+								}
+							}}
+						>
+							<img src={icon} alt={label} className="w-5 h-5" />
+							{label}
+							<span className="absolute bottom-[-4px] left-0 right-0 h-[2px] bg-purple-500 transform scale-x-0 transition-transform duration-300 hover:scale-x-100" />
+						</div>
+					))}
 			</div>
 			<div className="flex items-center gap-4">
 				<div className="relative">
-					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 					<img
 						src={IconNotification}
 						alt="Notificações"
@@ -160,7 +170,6 @@ export function Navbar() {
 				</div>
 				{user && (
 					<div
-						// biome-ignore lint/a11y/useSemanticElements: <explanation>
 						role="button"
 						tabIndex={0}
 						className="relative flex items-center gap-2 cursor-pointer bg-transparent border-none"
@@ -177,7 +186,6 @@ export function Navbar() {
 								userDropdownOpen ? "rotate-180" : "rotate-0"
 							}`}
 						>
-							{/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
 							<svg
 								className="w-4 h-4 text-white"
 								fill="none"

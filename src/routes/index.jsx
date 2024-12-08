@@ -4,6 +4,7 @@ import { Layout } from "../Layout";
 import LessonPage from "../containers/Aulas";
 import { Home } from "../containers/home";
 import { Login } from "../containers/login";
+import { ManagerDashboard } from "../containers/manager";
 import { ProtectedRoute } from "./ProtectedRoute";
 
 export const router = createBrowserRouter([
